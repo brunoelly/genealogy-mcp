@@ -1,0 +1,9 @@
+# Files are mounted into Linux containers; keep LF regardless of the Windows checkout.
+* text=auto eol=lf
+
+*.pdf binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.tif binary
+*.tiff binary
