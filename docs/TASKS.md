@@ -87,9 +87,9 @@ Note on file location: a clone on the Windows drive is reached from Ubuntu throu
 
 ### 1.1 Repository hygiene files (§4, §12)
 
-- [ ] `.gitignore`: `.venv/`, `__pycache__/`, `*.pyc`, `.pytest_cache/`, `.mypy_cache/`, `.ruff_cache/`, `.env`, `corpus/*`, `!corpus/.gitkeep`.
-- [ ] `.dockerignore`: `.git`, `.venv`, `corpus`, `.env`, `**/__pycache__`, `.pytest_cache`, `.mypy_cache`, `.ruff_cache`, `docs`, `evals`.
-- [ ] `.env.example`, with placeholders and no real secrets:
+- [x] `.gitignore`: Python artifacts (`.venv/`, `__pycache__/`, `*.py[cod]`, `*.egg-info/`, `build/`, `dist/`), tool caches and coverage reports, `.env` and `.env.*` (except `.env.example`), `corpus/*` (except `.gitkeep`), private eval files, database dumps, and editor/OS files.
+- [x] `.dockerignore` as an allow-list: exclude everything (`*`), then re-include only `pyproject.toml`, `uv.lock`, `README.md`, `src/`, `alembic/`, and `alembic.ini`, and drop `**/__pycache__` and `**/*.py[cod]`. Tests, docs, evals, and the corpus reach the dev container through bind mounts, so secrets and PDFs can never enter an image layer.
+- [x] `.env.example`, with placeholders and no real secrets:
   ```text
   POSTGRES_USER=genealogy
   POSTGRES_PASSWORD=change-me
@@ -111,9 +111,17 @@ Note on file location: a clone on the Windows drive is reached from Ubuntu throu
   LOG_LEVEL=INFO
   ```
 
-- [ ] Copy it to `.env` and set a real password there: `cp .env.example .env`.
+- [x] Copy it to `.env` and set a real password there. One way, which fills every `change-me` with the same random value:
 
-**Done when** `git status` shows `.env.example` but not `.env` or the PDFs.
+  ```bash
+  sed "s/change-me/$(openssl rand -hex 24)/g" .env.example > .env
+  ```
+
+**Done when** `git status` shows `.env.example` but not `.env` or the PDFs, and a throwaway build shows that the Docker context contains only the allow-listed files:
+
+```bash
+printf 'FROM busybox\nCOPY . /ctx\nRUN find /ctx | sort\n' | docker build --no-cache --progress=plain -f - .
+```
 
 ### 1.2 `pyproject.toml` (§4 Python standards, Dependencies)
 

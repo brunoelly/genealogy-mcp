@@ -1,0 +1,13 @@
+# Allow-list: the build context contains only what the image needs.
+# Tests, docs, evals, and the corpus reach the dev container through bind mounts.
+*
+
+!pyproject.toml
+!uv.lock
+!README.md
+!src/
+!alembic/
+!alembic.ini
+
+**/__pycache__
+**/*.py[cod]

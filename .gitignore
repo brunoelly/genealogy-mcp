@@ -1,13 +1,23 @@
 # Python
 .venv/
 __pycache__/
-*.pyc
+*.py[cod]
+*.egg-info/
+build/
+dist/
+
+# Tooling caches and reports
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
 
 # Secrets
 .env
+.env.*
+!.env.example
 
 # Private documents and evaluation data
 corpus/*
@@ -15,5 +25,13 @@ corpus/*
 evals/questions.yaml
 evals/RESULTS.md
 
-# Backups
-*.sql
+# Database dumps
+backup*.sql
+*.dump
+
+# Editors and OS
+.idea/
+.vscode/
+*.swp
+.DS_Store
+Thumbs.db
